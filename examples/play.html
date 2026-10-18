@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Heath Desk</title>
+  <style>
+    html, body { margin: 0; min-height: 100%; background: #111; color: #ddd; }
+    body { display: flex; flex-direction: column; align-items: center; padding: 24px; font: 15px/1.45 sans-serif; }
+    p { max-width: 46rem; margin: 0 0 16px; }
+    code { color: #f6e7b2; }
+  </style>
+</head>
+<body>
+  <p>
+    F10 opens the menu. The mouse and the arrow keys both move.
+    Enter presses the default button, Space presses the cursor, and Alt-X quits.
+    Add <code>?engine=3d</code> to paint through the 3D terminal.
+  </p>
+  <script>
+    const engine = new URLSearchParams(location.search).get('engine') === '3d' ? '3d' : '2d';
+    const tag = document.createElement('script');
+    tag.src = `../../emoji-engine-${engine}/browser/emoji-engine-${engine}.js`;
+    tag.onload = () => {
+      const ui = document.createElement('script');
+      ui.src = '../browser/emoji-engine-ui.js';
+      ui.onload = () => {
+        const boot = document.createElement('script');
+        boot.type = 'module';
+        boot.src = './boot.js';
+        document.body.appendChild(boot);
+      };
+      ui.onerror = () => document.body.insertAdjacentHTML('beforeend', '<p>emoji-engine-ui browser build failed to load.</p>');
+      document.body.appendChild(ui);
+    };
+    tag.onerror = () => document.body.insertAdjacentHTML('beforeend', '<p>Engine browser build failed to load. Serve the folder that contains both engines.</p>');
+    document.body.appendChild(tag);
+  </script>
+</body>
+</html>
